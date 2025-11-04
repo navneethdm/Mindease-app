@@ -57,7 +57,7 @@
 </head>
 <body class="antialiased text-gray-800">
 
-    <div id="script-error-message" class="fixed inset-0 bg-red-900 bg-opacity-95 text-white p-8 z-50 flex items-center justify-center text-center">
+    <div id="script-error-message" class="fixed inset-0 bg-red-900 bg-opacity-95 text-white p-8 z-50 flex items-center justify-center text-center" style="display: none;">
         <div>
             <h2 class="text-3xl font-bold mb-4">MindEase App Did Not Start Correctly</h2>
             <p class="text-lg">The app's interactive features could not be loaded. This often happens due to browser security restrictions when you open the HTML file directly from your computer's folder (using a <code class="bg-black/50 px-1 rounded-sm">file:///...</code> address).</p>
@@ -65,9 +65,9 @@
                 <h3 class="font-semibold text-xl mb-2">How to Fix This:</h3>
                 <p>To use all features, this app needs to be served by a simple local web server.</p>
                 <ol class="list-decimal list-inside mt-2 space-y-2">
-                    <li>Open a command prompt or terminal in the same folder where you saved this <code class="bg-black/50 px-1 rounded-sm">mindease.html</code> file.</li>
+                    <li>Open a command prompt or terminal in the same folder where you saved this <code class="bg-black/50 px-1 rounded-sm">index.html</code> file.</li>
                     <li>If you have Python installed, type this command and press Enter: <br><code class="block bg-black/50 p-2 rounded mt-1 text-green-300">python -m http.server</code></li>
-                    <li>Open your web browser and go to this address: <br><a href="http://localhost:8000/mindease.html" class="underline text-blue-300" target="_blank">http://localhost:8000/mindease.html</a></li>
+                    <li>Open your web browser and go to this address: <br><a href="http://localhost:8000/index.html" class="underline text-blue-300" target="_blank">http://localhost:8000/index.html</a></li>
                 </ol>
             </div>
             <p class="mt-4 text-sm text-gray-300">Once the app loads correctly from a local server, this message will disappear.</p>
@@ -76,8 +76,8 @@
 
     <div id="app-container" class="max-w-4xl mx-auto min-h-screen bg-white shadow-lg flex flex-col md:flex-row" style="display: none;">
 
-        
-<aside class="w-full md:w-1/5 bg-blue-500 text-white p-4 flex flex-row md:flex-col justify-around md:justify-start">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-1/5 bg-blue-500 text-white p-4 flex flex-row md:flex-col justify-around md:justify-start">
             <h1 class="text-2xl font-bold mb-0 md:mb-8 text-center md:text-left">MindEase</h1>
             <nav class="flex flex-row md:flex-col gap-2">
                 <button data-target="home" class="nav-item w-full text-left p-3 rounded-lg font-medium transition duration-200 hover:bg-blue-600 active">Home</button>
@@ -93,12 +93,12 @@
             </div>
         </aside>
 
-        
-<main class="flex-1 p-6 md:p-8 bg-gray-50 overflow-y-auto">
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-8 bg-gray-50 overflow-y-auto">
             <div class="main-content">
 
-                
-<div id="home" class="active animate-fade-in">
+                <!-- Home Section -->
+                <div id="home" class="active animate-fade-in">
                     <h2 class="text-3xl font-bold text-gray-800 mb-4">Welcome to MindEase</h2>
                     <p class="text-lg text-gray-600 mb-6">Your personal space for mental clarity and peace. Select a tool from the menu to begin your journey towards a healthier mind.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -121,8 +121,8 @@
                     </div>
                 </div>
 
-                
-<div id="journal">
+                <!-- Journal Section -->
+                <div id="journal">
                     <h2 class="text-3xl font-bold mb-6">My Journal</h2>
                     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                         <h3 class="text-xl font-semibold mb-4">How are you feeling today?</h3>
@@ -147,24 +147,24 @@
                     </div>
                 </div>
 
-                
-<div id="meditate">
-                    <h2 class="text-3xl font-bold mb-6">Guided Meditation & Breathing</h2>
+                <!-- Meditate Section -->
+                <div id="meditate">
+                   <h2 class="text-3xl font-bold mb-6">Guided Meditation & Breathing</h2>
                     <div id="meditation-player" class="hidden bg-white p-6 rounded-lg shadow-md mb-6 text-center">
                         <h3 id="player-title" class="text-2xl font-semibold mb-4"></h3>
                         <p id="player-description" class="text-gray-600 mb-6"></p>
                         <div id="breathing-circle" class="w-40 h-40 bg-blue-300 rounded-full mx-auto my-4 flex items-center justify-center transition-transform duration-3000 ease-in-out">
                             <span id="breathing-text" class="text-xl font-medium text-white"></span>
                         </div>
-                        <button id="stop-meditation" class="mt-4 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-600 transition">Stop</button>
+                         <button id="stop-meditation" class="mt-4 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-600 transition">Stop</button>
                     </div>
                     <div id="meditation-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     </div>
                 </div>
 
-                
-<div id="chat" class="flex flex-col h-[calc(100vh-120px)]">
-                    <h2 class="text-3xl font-bold mb-4">AI Wellness Companion</h2>
+                <!-- Chatbot Section -->
+                <div id="chat" class="flex flex-col h-[calc(100vh-120px)]">
+                     <h2 class="text-3xl font-bold mb-4">AI Wellness Companion</h2>
                     <div id="chat-window" class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto mb-4 flex flex-col gap-4">
                     </div>
                     <div id="chat-input-container" class="flex">
@@ -173,23 +173,23 @@
                     </div>
                 </div>
 
-                
-<div id="goals">
-                    <h2 class="text-3xl font-bold mb-6">My Wellness Goals</h2>
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <!-- Goals Section -->
+                <div id="goals">
+                     <h2 class="text-3xl font-bold mb-6">My Wellness Goals</h2>
+                     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                         <h3 class="text-xl font-semibold mb-4">Add a New Goal</h3>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <input type="text" id="goal-input" class="flex-1 p-3 border rounded-lg" placeholder="e.g., Meditate for 5 minutes">
                             <input type="number" id="goal-target" class="p-3 border rounded-lg w-full sm:w-32" placeholder="Target (days)">
-                            <button id="add-goal" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Add Goal</button>
+                             <button id="add-goal" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Add Goal</button>
                         </div>
                     </div>
                     <div id="goal-list" class="space-y-4">
                     </div>
                 </div>
 
-                
-<div id="resources">
+                <!-- Resources Section -->
+                <div id="resources">
                     <h2 class="text-3xl font-bold mb-6">Helpful Resources</h2>
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -197,7 +197,7 @@
                             <p class="text-gray-600 mb-4">Learn about the symptoms, causes, and treatments for anxiety disorders. Knowledge is a powerful tool in managing your mental health.</p>
                             <a href="https://www.nimh.nih.gov/health/topics/anxiety-disorders" target="_blank" class="text-blue-500 font-semibold hover:underline">Read more &rarr;</a>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="bg-white p-6 rounded-lg shadow-md">
                             <h3 class="text-xl font-semibold mb-2">Cognitive Behavioral Therapy (CBT)</h3>
                             <p class="text-gray-600 mb-4">Discover how CBT techniques can help you identify and change negative thinking patterns and behaviors.</p>
                             <a href="https://www.apa.org/ptsd-guideline/patients-and-families/cognitive-behavioral" target="_blank" class="text-blue-500 font-semibold hover:underline">Learn CBT Basics &rarr;</a>
@@ -210,24 +210,24 @@
                     </div>
                 </div>
 
-                
-<div id="settings">
+                <!-- Settings Section -->
+                <div id="settings">
                     <h2 class="text-3xl font-bold mb-6">Settings</h2>
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-xl font-semibold mb-2">Firebase Configuration (Required)</h3>
-                            <p class="text-gray-600 mb-4">To save data locally, you need a free Firebase project. Create one and paste your web app configuration values below.</p>
+                            <h3 class="text-xl font-semibold mb-2">Firebase Configuration (Local)</h3>
+                            <p class="text-gray-600 mb-4">This section is for local development (running on `localhost`). Your deployed Netlify site gets keys automatically.</p>
                             <div class="space-y-3">
                                 <input type="text" id="fb-apiKey" class="w-full p-3 border rounded-lg" placeholder="Firebase API Key">
                                 <input type="text" id="fb-authDomain" class="w-full p-3 border rounded-lg" placeholder="Firebase Auth Domain">
                                 <input type="text" id="fb-projectId" class="w-full p-3 border rounded-lg" placeholder="Firebase Project ID">
                             </div>
                             <button id="save-firebase-config" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Save Config</button>
-                            <p id="firebase-status" class="text-sm mt-2 text-gray-500"></p>
+                             <p id="firebase-status" class="text-sm mt-2 text-gray-500"></p>
                         </div>
                         <div class="bg-white p-6 rounded-lg shadow-md">
                             <h3 class="text-xl font-semibold mb-2">AI Chatbot Configuration</h3>
-                            <p class="text-gray-600 mb-4">To use the AI chatbot, you need a Gemini API key from Google AI Studio.</p>
+                            <p class="text-gray-600 mb-4">To use the AI chatbot, you need a Gemini API key from Google AI Studio. This key is saved in your browser.</p>
                             <div class="flex flex-col sm:flex-row gap-2">
                                 <input type="password" id="api-key-input" class="flex-1 p-3 border rounded-lg" placeholder="Enter your Gemini API Key">
                                 <button id="save-api-key" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Save Key</button>
@@ -250,8 +250,8 @@
 
     </div>
 
-    
-<script type="module">
+    <!-- Firebase and App Logic -->
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, doc, setDoc, deleteDoc, orderBy, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -267,30 +267,51 @@
         const chatInput = document.getElementById('chat-input');
         const addGoalBtn = document.getElementById('add-goal');
         const saveFirebaseConfigBtn = document.getElementById('save-firebase-config');
+        const authStatus = document.getElementById('auth-status');
+        const firebaseStatus = document.getElementById('firebase-status');
 
         // --- INITIALIZATION ---
-        function initializeAppLogic() {
-            let userFirebaseConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
-            
+        async function initializeAppLogic() {
+            let userFirebaseConfig;
+
             if (typeof __firebase_config !== 'undefined') {
+                // Canvas environment
                 userFirebaseConfig = JSON.parse(__firebase_config);
+                firebaseStatus.textContent = "Canvas environment detected.";
+                await initializeFirebase(userFirebaseConfig);
+            } else if (window.location.hostname.includes('netlify.app')) {
+                // Netlify environment
+                authStatus.textContent = "Fetching config...";
+                try {
+                    const response = await fetch('/.netlify/functions/get-firebase-config');
+                    if (!response.ok) {
+                        throw new Error(`Netlify function failed with status ${response.status}`);
+                    }
+                    userFirebaseConfig = await response.json();
+                    firebaseStatus.textContent = "Fetched config from Netlify.";
+                    firebaseStatus.className = "text-sm mt-2 text-green-600";
+                    await initializeFirebase(userFirebaseConfig);
+                } catch (error) {
+                    console.error("Error fetching Netlify config:", error);
+                    authStatus.textContent = "Config Fetch Failed";
+                    authStatus.classList.add("text-red-400");
+                    firebaseStatus.textContent = "Could not fetch config from Netlify. Check function logs.";
+                    firebaseStatus.className = "text-sm mt-2 text-red-600";
+                }
+            } else {
+                // Local environment
+                userFirebaseConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
+                if (!userFirebaseConfig || !userFirebaseConfig.apiKey) {
+                    authStatus.textContent = "Firebase Not Configured";
+                    authStatus.classList.add("text-yellow-300");
+                    firebaseStatus.textContent = "Please configure Firebase in Settings to save data.";
+                    firebaseStatus.className = "text-sm mt-2 text-red-600";
+                    return;
+                }
+                firebaseStatus.textContent = "Firebase configuration is set.";
+                firebaseStatus.className = "text-sm mt-2 text-green-600";
+                await initializeFirebase(userFirebaseConfig);
             }
-
-            const firebaseStatus = document.getElementById('firebase-status');
-            const authStatus = document.getElementById('auth-status');
-
-            if (!userFirebaseConfig || !userFirebaseConfig.apiKey) {
-                authStatus.textContent = "Firebase Not Configured";
-                authStatus.classList.add("text-yellow-300");
-                firebaseStatus.textContent = "Please configure Firebase in Settings to save data.";
-                firebaseStatus.className = "text-sm mt-2 text-red-600";
-                return;
-            }
-            
-            firebaseStatus.textContent = "Firebase configuration is set.";
-            firebaseStatus.className = "text-sm mt-2 text-green-600";
-            
-            initializeFirebase(userFirebaseConfig);
         }
 
         async function initializeFirebase(firebaseConfig) {
@@ -299,7 +320,6 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                const authStatus = document.getElementById('auth-status');
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
@@ -314,18 +334,21 @@
                             }
                         } catch (error) {
                             console.error("Anonymous sign-in failed:", error);
-                            if (error.code === 'auth/api-key-not-valid') {
+                             if (error.code === 'auth/api-key-not-valid') {
                                 authStatus.textContent = "Invalid Firebase Key";
                                 authStatus.classList.add("text-red-400");
+                                authStatus.title = error.message;
                             } else {
                                 authStatus.textContent = "Auth Failed";
+                                authStatus.title = error.message; // Show full error on hover
                             }
                         }
                     }
                 });
             } catch(e) {
                 console.error("Firebase initialization failed:", e);
-                document.getElementById('auth-status').textContent = "Firebase Init Failed";
+                authStatus.textContent = "Firebase Init Failed";
+                authStatus.title = e.message;
             }
         }
 
@@ -358,7 +381,10 @@
         const journalList = document.getElementById('journal-list');
 
         async function saveJournalEntry() {
-            if (!userId) return;
+            if (!userId) {
+                 alert("Could not save entry: User not authenticated.");
+                 return;
+            }
             const entryText = journalEntryInput.value.trim();
             const mood = moodSelect.value;
             if (entryText === "") return;
@@ -373,6 +399,7 @@
                 journalEntryInput.value = "";
             } catch (error) {
                 console.error("Error saving journal entry:", error);
+                alert(`Error saving entry: ${error.message}. Check console and Firebase Rules.`);
             }
         }
 
@@ -403,7 +430,10 @@
                     `;
                     journalList.appendChild(entryEl);
                 });
-            }, (error) => console.error("Error loading journal:", error));
+            }, (error) => {
+                console.error("Error loading journal:", error);
+                journalList.innerHTML = `<p class="text-red-500">Error loading journal. Check console and Firebase Rules.</p>`;
+            });
         }
 
         // --- MEDITATION LOGIC ---
@@ -494,15 +524,27 @@
         const systemPrompt = "You are a caring and supportive mental wellness assistant named 'Ease'. Your role is to provide a safe, non-judgmental space for users. Offer comfort, practical advice based on CBT and mindfulness, and gentle encouragement. Do not provide medical diagnoses. If a user seems to be in serious distress, gently suggest they seek professional help. Keep your responses concise and empathetic.";
         let chatHistory = [];
         
-     function updateChatUI() {
-    chatInput.disabled = false;
-    chatSendBtn.disabled = false;
-    chatInput.placeholder = "Type your message...";
-    if (chatHistory.length === 0) {
-        chatHistory = [{ role: "model", parts: [{ text: "Hello! I'm Ease, your wellness companion. How are you feeling today?" }] }];
-    }
-    renderChatHistory();
-}
+        function updateChatUI() {
+            if (geminiApiKey) {
+                chatInput.disabled = false;
+                chatSendBtn.disabled = false;
+                chatInput.placeholder = "Type your message...";
+                apiKeyStatus.textContent = "API Key is set. You can now use the chatbot.";
+                apiKeyStatus.className = "text-sm mt-2 text-green-600";
+                apiKeyInput.value = geminiApiKey;
+                if (chatHistory.length === 0) {
+                    chatHistory = [{ role: "model", parts: [{ text: "Hello! I'm Ease, your wellness companion. How are you feeling today?" }] }];
+                }
+            } else {
+                chatInput.disabled = true;
+                chatSendBtn.disabled = true;
+                chatInput.placeholder = "Please set your API key in Settings.";
+                apiKeyStatus.textContent = "API Key is not set. The chatbot is disabled.";
+                apiKeyStatus.className = "text-sm mt-2 text-red-600";
+                chatHistory = [{ role: "model", parts: [{ text: "To start our conversation, please go to the Settings page and enter your Gemini API key." }] }];
+            }
+            renderChatHistory();
+        }
 
         function renderChatHistory() {
             chatWindow.innerHTML = '';
@@ -530,12 +572,17 @@
             chatWindow.appendChild(loadingBubble);
             chatWindow.scrollTop = chatWindow.scrollHeight;
             
-            // This is the new URL pointing to your helper function
-            const apiUrl = '/.netlify/functions/ask-chatbot';
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
 
             try {
+                const payloadContents = [...chatHistory];
+                if (payloadContents.length > 0 && payloadContents[0].role === 'model') {
+                    payloadContents.unshift({ role: "user", parts: [{ text: "Hello, let's start." }] });
+                }
+
                 const payload = {
-                    messages: chatHistory
+                    contents: payloadContents,
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
                 };
 
                 const response = await fetch(apiUrl, {
@@ -545,7 +592,10 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`The server responded with an error.`);
+                    let errorBody = await response.text();
+                    try { errorBody = JSON.parse(errorBody); } catch (e) { /* ignore */ }
+                    console.error("API Error Response:", errorBody);
+                    throw new Error(`API error: ${response.statusText} (${response.status})`);
                 }
 
                 const result = await response.json();
@@ -558,23 +608,32 @@
                     chatHistory.push({ role: "model", parts: [{ text: aiText }] });
                 } else {
                     addMessageToChat("I'm sorry, I couldn't process that. Please try again.", false);
-                    chatHistory.pop(); // remove the user message if AI fails
+                    chatHistory.pop();
                 }
 
             } catch (error) {
                 console.error("Error fetching AI response:", error);
                 loadingBubble.remove();
-                addMessageToChat("There was an error connecting to the chatbot. Please try again later.", false);
-                chatHistory.pop(); // remove the user message if AI fails
+                let errorMessage = "There was an error connecting to the AI. Please check your connection.";
+                if (error.message.includes("400")) {
+                    errorMessage = "There seems to be an issue with the API key (Bad Request). Please verify it's correct in the Settings tab.";
+                } else if (error.message.toLowerCase().includes("failed to fetch")) {
+                    errorMessage = "A network error occurred. Please check your internet connection and ensure you are not running this from a local file.";
+                } else if (error.message.includes("API key not valid")) {
+                    errorMessage = "The API Key you provided is not valid. Please check it in the Settings tab.";
+                }
+                addMessageToChat(errorMessage, false);
+                chatHistory.pop();
             }
         }
+
         async function handleChatSend() {
-    const message = chatInput.value.trim();
-    if (message) { // Fixed!
-        chatInput.value = "";
-        await getAIResponse(message);
-    }
-}
+            const message = chatInput.value.trim();
+            if (message && geminiApiKey) {
+                chatInput.value = "";
+                await getAIResponse(message);
+            }
+        }
         
         // --- GOALS LOGIC ---
         const goalInput = document.getElementById('goal-input');
@@ -582,7 +641,10 @@
         const goalList = document.getElementById('goal-list');
 
         async function addGoal() {
-            if (!userId) return;
+            if (!userId) {
+                 alert("Could not save goal: User not authenticated.");
+                 return;
+            }
             const text = goalInput.value.trim();
             const target = parseInt(goalTargetInput.value, 10);
             if (text === "" || isNaN(target) || target <= 0) return;
@@ -599,6 +661,7 @@
                 goalTargetInput.value = "";
             } catch(error) {
                 console.error("Error adding goal:", error);
+                alert(`Error saving goal: ${error.message}. Check console and Firebase Rules.`);
             }
         }
 
@@ -629,7 +692,7 @@
                         <div class="w-full bg-gray-200 rounded-full h-4">
                             <div class="bg-green-500 h-4 rounded-full goal-progress" style="width: ${percentage}%"></div>
                         </div>
-                        <div class="flex justify-end gap-2 mt-3">
+                        <div classf="flex justify-end gap-2 mt-3">
                             <button data-id="${doc.id}" data-progress="${goal.progress}" class="increment-btn bg-green-100 text-green-800 px-3 py-1 text-sm rounded-full hover:bg-green-200 transition">+1 Day</button>
                             <button data-id="${doc.id}" class="delete-btn bg-red-100 text-red-800 px-3 py-1 text-sm rounded-full hover:bg-red-200 transition">Delete</button>
                         </div>
@@ -653,7 +716,10 @@
                         await deleteDoc(docRef);
                     });
                 });
-            }, (error) => console.error("Error loading goals:", error));
+            }, (error) => {
+                console.error("Error loading goals:", error);
+                goalList.innerHTML = `<p class="text-red-500">Error loading goals. Check console and Firebase Rules.</p>`;
+            });
         }
 
         // --- SETTINGS AND DATA DOWNLOAD ---
@@ -704,7 +770,12 @@
 
         // --- EVENT LISTENERS & INITIAL LOAD ---
         window.onload = () => {
-            document.getElementById('script-error-message').style.display = 'none';
+            const errorMessageDiv = document.getElementById('script-error-message');
+            if (window.location.protocol === "file:") {
+                errorMessageDiv.style.display = 'flex';
+                return;
+            }
+            errorMessageDiv.style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             
             loadSettingsFromLocalStorage();
@@ -741,6 +812,7 @@
                 const key = document.getElementById('api-key-input').value.trim();
                 if (key) {
                     localStorage.setItem('geminiApiKey', key);
+imgit
                     geminiApiKey = key;
                     alert('API Key saved!');
                     updateChatUI();
