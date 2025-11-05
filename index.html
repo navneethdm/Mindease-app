@@ -456,8 +456,11 @@
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     contents: [
-      { role: "system", parts: [{ text: systemPrompt }] },
-      ...chatHistory.map(m => ({ role: m.role, parts: m.parts })),
+      { role: "user", parts: [{ text: systemPrompt }] },
+      ...chatHistory.map(m => ({
+        role: m.role,  // must be "user" or "model"
+        parts: m.parts
+      })),
       { role: "user", parts: [{ text: userMessage }] }
     ]
   })
@@ -634,4 +637,5 @@
   </script>
 </body>
 </html>
+
 
