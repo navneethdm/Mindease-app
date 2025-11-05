@@ -451,11 +451,17 @@
       try {
         const payload = { messages: [{ role: "user", parts: [{ text: userMessage }] }, ...chatHistory.filter(m=>m.role!=='user').slice(-8)] };
         // Keep payload light; model can infer context from recent messages
-        const response = await fetch('/.netlify/functions/ask-chatbot', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: [{ role: "user", parts: [{ text: `${systemPrompt}\n\n${userMessage}` }] }] })
-        });
+       const response = await fetch('/.netlify/functions/ask-chatbot', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    contents: [
+      { role: "system", parts: [{ text: systemPrompt }] },
+      ...chatHistory.map(m => ({ role: m.role, parts: m.parts })),
+      { role: "user", parts: [{ text: userMessage }] }
+    ]
+  })
+});
 
         if (!response.ok) throw new Error('The server responded with an error.');
         const result = await response.json();
@@ -628,3 +634,4 @@
   </script>
 </body>
 </html>
+
