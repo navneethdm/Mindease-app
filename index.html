@@ -3,250 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindEase - Your Mental Wellness Companion</title>
+  <title>MindEase</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
+
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f4f8;
-    }
-    .glassmorphism {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .nav-item.active {
-      background-color: #3b82f6;
-      color: white;
-    }
-    .main-content > div {
-      display: none;
-    }
-    .main-content > div.active {
-      display: block;
-    }
-    .chat-bubble {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 20px;
-      word-wrap: break-word;
-    }
-    .chat-bubble-user {
-      background-color: #3b82f6;
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-    .chat-bubble-ai {
-      background-color: #e5e7eb;
-      color: #1f2937;
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-    .goal-progress {
-      transition: width 0.3s ease-in-out;
-    }
-    #chat-input:disabled {
-      background-color: #e5e7eb;
-      cursor: not-allowed;
-    }
+    body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
+    .nav-item.active { background-color: #3b82f6; color: white; }
+    .main-content > div { display: none; }
+    .main-content > div.active { display: block; }
+    .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 20px; }
+    .chat-bubble-user { background-color: #3b82f6; color: white; align-self: flex-end; }
+    .chat-bubble-ai { background-color: #e5e7eb; color: #1f2937; align-self: flex-start; }
+    #breathing-circle { transition: transform 4s ease-in-out; }
   </style>
 </head>
+
 <body class="antialiased text-gray-800">
 
-  <div id="script-error-message" class="fixed inset-0 bg-red-900 bg-opacity-95 text-white p-8 z-50 flex items-center justify-center text-center" style="display: none;">
-    <div>
-      <h2 class="text-3xl font-bold mb-4">MindEase App Did Not Start Correctly</h2>
-      <p class="text-lg">This happens when you open the file locally (<code>file:///</code>). Please serve it using a local server.</p>
-      <div class="mt-6 p-4 bg-gray-800 rounded-lg text-left max-w-2xl mx-auto">
-        <ol class="list-decimal list-inside mt-2 space-y-2">
-          <li>Open terminal in this folder.</li>
-          <li>Run: <code class="block bg-black/50 p-2 rounded mt-1 text-green-300">python -m http.server</code></li>
-          <li>Go to: <a href="http://localhost:8000" class="underline text-blue-300">http://localhost:8000</a></li>
-        </ol>
+<div id="app-container" class="max-w-4xl mx-auto min-h-screen bg-white shadow-lg flex flex-col md:flex-row">
+
+  <aside class="w-full md:w-1/5 bg-blue-500 text-white p-4 flex flex-col">
+    <h1 class="text-2xl font-bold mb-6">MindEase</h1>
+    <nav class="flex flex-col gap-2">
+      <button data-target="home" class="nav-item p-3 rounded-lg active">Home</button>
+      <button data-target="journal" class="nav-item p-3 rounded-lg">Journal</button>
+      <button data-target="meditate" class="nav-item p-3 rounded-lg">Meditate</button>
+      <button data-target="chat" class="nav-item p-3 rounded-lg">Chatbot</button>
+      <button data-target="goals" class="nav-item p-3 rounded-lg">Goals</button>
+      <button data-target="settings" class="nav-item p-3 rounded-lg">Settings</button>
+    </nav>
+    <div id="auth-status" class="mt-auto text-center text-xs">Connecting...</div>
+  </aside>
+
+  <main class="flex-1 p-6 bg-gray-50 overflow-y-auto">
+    <div class="main-content">
+
+      <div id="home" class="active">
+        <h2 class="text-3xl font-bold mb-4">Welcome to MindEase</h2>
+        <p class="text-gray-600">A space to track mood, meditate, and talk to your AI companion.</p>
       </div>
+
+      <div id="journal">
+        <h2 class="text-3xl font-bold mb-6">Journal</h2>
+        <select id="mood-select" class="p-2 border rounded-md">
+          <option>😊 Happy</option><option>🙂 Content</option><option>😐 Neutral</option>
+          <option>😔 Sad</option><option>😠 Angry</option><option>😰 Anxious</option>
+        </select>
+        <textarea id="journal-entry" class="w-full p-3 border rounded-md mt-4" rows="5"></textarea>
+        <button id="save-journal-entry" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg">Save</button>
+        <h3 class="text-xl font-bold mt-6 mb-3">Entries</h3>
+        <div id="journal-list"></div>
+      </div>
+
+      <div id="meditate">
+        <h2 class="text-3xl font-bold mb-6">Guided Meditation & Breathing</h2>
+
+        <div id="meditation-list" class="grid grid-cols-1 gap-4">
+          <button class="p-4 bg-white shadow rounded-md" onclick="startMeditation('box')">Box Breathing</button>
+        </div>
+
+        <div id="meditation-player" class="hidden bg-white shadow p-6 rounded-md text-center">
+          <h3 id="player-title" class="text-2xl font-semibold"></h3>
+          <p id="player-description" class="text-gray-600 mb-6"></p>
+          <div id="breathing-circle" class="w-40 h-40 rounded-full bg-blue-300 mx-auto mb-6"></div>
+          <p id="breathing-text" class="text-xl font-semibold mb-6"></p>
+          <button id="stop-meditation" class="bg-red-500 text-white px-6 py-2 rounded-lg">Stop</button>
+        </div>
+      </div>
+
+      <div id="chat" class="flex flex-col h-[calc(100vh-150px)]">
+        <h2 class="text-3xl font-bold mb-4">AI Wellness Chat</h2>
+        <div id="chat-window" class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto"></div>
+        <input id="chat-input" class="p-3 border rounded-md mt-3" placeholder="Type...">
+      </div>
+
+      <div id="goals">
+        <h2 class="text-3xl font-bold mb-4">Goals</h2>
+      </div>
+
+      <div id="settings">
+        <h2 class="text-3xl font-bold mb-4">Settings</h2>
+      </div>
+
     </div>
-  </div>
+  </main>
+</div>
 
-  <div id="app-container" class="max-w-4xl mx-auto min-h-screen bg-white shadow-lg flex flex-col md:flex-row" style="display: none;">
-    <aside class="w-full md:w-1/5 bg-blue-500 text-white p-4 flex flex-row md:flex-col justify-around md:justify-start">
-      <h1 class="text-2xl font-bold mb-0 md:mb-8 text-center md:text-left">MindEase</h1>
-      <nav class="flex flex-row md:flex-col gap-2">
-        <button data-target="home" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600 active">Home</button>
-        <button data-target="journal" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Journal</button>
-        <button data-target="meditate" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Meditate</button>
-        <button data-target="chat" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Chatbot</button>
-        <button data-target="goals" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Goals</button>
-        <button data-target="resources" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Resources</button>
-        <button data-target="settings" class="nav-item w-full text-left p-3 rounded-lg font-medium transition hover:bg-blue-600">Settings</button>
-      </nav>
-      <div id="auth-status" class="mt-auto text-center text-xs p-2">Connecting...</div>
-    </aside>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <main class="flex-1 p-6 md:p-8 bg-gray-50 overflow-y-auto">
-      <div class="main-content">
-        <div id="home" class="active">
-          <h2 class="text-3xl font-bold text-gray-800 mb-4">Welcome to MindEase</h2>
-          <p class="text-lg text-gray-600 mb-6">Your personal space for mental clarity and peace.</p>
-        </div>
+/* ✅ INSERT YOUR FIREBASE CONFIG BELOW */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID"
+};
+/* ----------------------------------- */
 
-        <div id="journal">
-          <h2 class="text-3xl font-bold mb-6">My Journal</h2>
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h3 class="text-xl font-semibold mb-4">How are you feeling today?</h3>
-            <div class="flex items-center space-x-4 mb-4">
-              <label for="mood-select">Mood:</label>
-              <select id="mood-select" class="p-2 border rounded-md">
-                <option>😊 Happy</option>
-                <option>🙂 Content</option>
-                <option>😐 Neutral</option>
-                <option>😔 Sad</option>
-                <option>😠 Angry</option>
-                <option>😰 Anxious</option>
-              </select>
-            </div>
-            <textarea id="journal-entry" class="w-full p-3 border rounded-md" rows="5" placeholder="Write about your day..."></textarea>
-            <button id="save-journal-entry" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Save Entry</button>
-          </div>
-          <div id="journal-history">
-            <h3 class="text-2xl font-bold mb-4">Past Entries</h3>
-            <div id="journal-list" class="space-y-4"></div>
-          </div>
-        </div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let userId = null;
 
-        <div id="meditate">
-          <h2 class="text-3xl font-bold mb-6">Guided Meditation</h2>
-          <div id="meditation-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-        </div>
+onAuthStateChanged(auth, async (u) => {
+  if (u) {
+    userId = u.uid;
+    document.getElementById("auth-status").textContent = "Connected";
+    loadEntries();
+  } else {
+    await signInAnonymously(auth);
+  }
+});
 
-        <div id="chat" class="flex flex-col h-[calc(100vh-120px)]">
-          <h2 class="text-3xl font-bold mb-4">AI Wellness Companion</h2>
-          <div id="chat-window" class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto mb-4 flex flex-col gap-4"></div>
-          <div id="chat-input-container" class="flex">
-            <input type="text" id="chat-input" class="flex-1 p-3 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message...">
-            <button id="chat-send" class="bg-blue-500 text-white px-6 py-2 rounded-r-lg font-semibold hover:bg-blue-600 transition">Send</button>
-          </div>
-        </div>
+document.getElementById("save-journal-entry").onclick = async () => {
+  if (!userId) return;
+  await addDoc(collection(db, `users/${userId}/journal`), {
+    mood: document.getElementById("mood-select").value,
+    text: document.getElementById("journal-entry").value,
+    createdAt: serverTimestamp()
+  });
+  document.getElementById("journal-entry").value = "";
+};
 
-        <div id="goals">
-          <h2 class="text-3xl font-bold mb-6">My Wellness Goals</h2>
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <div class="flex flex-col sm:flex-row gap-4">
-              <input type="text" id="goal-input" class="flex-1 p-3 border rounded-lg" placeholder="e.g., Meditate for 5 minutes">
-              <input type="number" id="goal-target" class="p-3 border rounded-lg w-full sm:w-32" placeholder="Target (days)">
-              <button id="add-goal" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Add Goal</button>
-            </div>
-          </div>
-          <div id="goal-list" class="space-y-4"></div>
-        </div>
-
-        <div id="settings">
-          <h2 class="text-3xl font-bold mb-6">Settings</h2>
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h3 class="text-xl font-semibold mb-2">AI Chatbot Configuration</h3>
-            <p class="text-gray-600 mb-4">Enter your Gemini API key below.</p>
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input type="password" id="api-key-input" class="flex-1 p-3 border rounded-lg" placeholder="Enter your Gemini API Key">
-              <button id="save-api-key" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Save Key</button>
-            </div>
-            <p id="api-key-status" class="text-sm mt-2 text-gray-500"></p>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    const appConfig = {
-      apiKey: "YOUR_FIREBASE_API_KEY",
-      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-      projectId: "YOUR_FIREBASE_PROJECT_ID"
-    };
-
-    const app = initializeApp(appConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    let userId = null;
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userId = user.uid;
-        document.getElementById('auth-status').textContent = "Connected";
-        loadJournalEntries();
-      } else {
-        await signInAnonymously(auth);
-      }
+function loadEntries() {
+  const q = query(collection(db, `users/${userId}/journal`), orderBy("createdAt", "desc"));
+  onSnapshot(q, snap => {
+    const list = document.getElementById("journal-list");
+    list.innerHTML = "";
+    snap.forEach(doc => {
+      const e = doc.data();
+      const div = document.createElement("div");
+      div.className = "p-3 bg-white shadow my-2 rounded";
+      div.textContent = `${e.mood} - ${e.text}`;
+      list.append(div);
     });
+  });
+}
 
-    const journalEntryInput = document.getElementById('journal-entry');
-    const moodSelect = document.getElementById('mood-select');
-    const journalList = document.getElementById('journal-list');
+let synth, meditationInterval;
 
-    document.getElementById('save-journal-entry').addEventListener('click', async () => {
-      if (!userId) {
-        alert("Could not save entry: User not authenticated.");
-        return;
-      }
-      const text = journalEntryInput.value.trim();
-      if (!text) return;
-      await addDoc(collection(db, `users/${userId}/journal`), {
-        mood: moodSelect.value,
-        text,
-        createdAt: serverTimestamp()
-      });
-      journalEntryInput.value = "";
-    });
+window.startMeditation = function() {
+  document.getElementById("meditation-list").classList.add("hidden");
+  document.getElementById("meditation-player").classList.remove("hidden");
+  document.getElementById("player-title").innerText = "Box Breathing";
+  document.getElementById("player-description").innerText = "Inhale 4s, Hold 4s, Exhale 4s, Hold 4s";
 
-    function loadJournalEntries() {
-      if (!userId) return;
-      const q = query(collection(db, `users/${userId}/journal`), orderBy("createdAt", "desc"));
-      onSnapshot(q, (snapshot) => {
-        journalList.innerHTML = "";
-        snapshot.forEach(doc => {
-          const e = doc.data();
-          const date = e.createdAt ? e.createdAt.toDate().toLocaleString() : "Just now";
-          const div = document.createElement('div');
-          div.className = "bg-white p-4 rounded-lg shadow";
-          div.innerHTML = `<p class="font-semibold">${e.mood}</p><p>${e.text}</p><p class="text-sm text-gray-500">${date}</p>`;
-          journalList.appendChild(div);
-        });
-      });
-    }
+  Tone.start().then(() => synth = new Tone.Synth().toDestination());
 
-    // --- Gemini Key save ---
-    document.getElementById('save-api-key').addEventListener('click', () => {
-      const key = document.getElementById('api-key-input').value.trim();
-      if (key) {
-        localStorage.setItem('geminiApiKey', key);
-        alert('API Key saved!');
-      }
-    });
+  let steps = [
+    ["Inhale", 1.3],
+    ["Hold", 1.3],
+    ["Exhale", 0.8],
+    ["Hold", 0.8]
+  ];
+  let i = 0;
+  function breathe() {
+    let [txt, scale] = steps[i % 4];
+    document.getElementById("breathing-text").innerText = txt;
+    document.getElementById("breathing-circle").style.transform = `scale(${scale})`;
+    if (synth) synth.triggerAttackRelease("C4", "8n");
+    i++;
+  }
+  breathe();
+  meditationInterval = setInterval(breathe, 4000);
+};
 
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const target = btn.dataset.target;
-        document.querySelectorAll('.main-content > div').forEach(div => {
-          div.classList.toggle('active', div.id === target);
-        });
-      });
-    });
+document.getElementById("stop-meditation").onclick = () => {
+  clearInterval(meditationInterval);
+  if (synth) synth.dispose();
+  document.getElementById("meditation-player").classList.add("hidden");
+  document.getElementById("meditation-list").classList.remove("hidden");
+};
 
-    window.onload = () => {
-      if (window.location.protocol === "file:") {
-        document.getElementById('script-error-message').style.display = 'flex';
-        return;
-      }
-      document.getElementById('app-container').style.display = 'flex';
-    };
-  </script>
+document.querySelectorAll(".nav-item").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  const t = btn.dataset.target;
+  document.querySelectorAll(".main-content > div").forEach(s => s.classList.toggle("active", s.id === t));
+});
+</script>
+
 </body>
 </html>
