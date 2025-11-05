@@ -1,42 +1,56 @@
 // File: netlify/functions/ask-chatbot.js
 
 exports.handler = async function (event) {
-  // 1. Get the user's message from the request
-  const { messages } = JSON.parse(event.body);
-
-  // 2. Get your secret API key from a secure environment variable
-  const geminiApiKey = process.env.GEMINI_API_KEY;
-
-  // 3. The URL for the Gemini API
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
-
-  // 4. The data to send to the Gemini API
-  const payload = {
-    contents: messages,
-    // Add any other system instructions or settings here
-  };
-
   try {
-    // 5. Call the Gemini API from your server
+    // Parse incoming request
+    const { contents } = JSON.parse(event.body || "{}");
+
+    if (!contents || !Array.isArray(contents) || contents.length === 0) {
+      return {
+        statusCode: 400,
+        body: "Invalid request: 'contents' array is required.",
+      };
+    }
+
+    // Secure server-side Gemini API key
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    if (!geminiApiKey) {
+      return {
+        statusCode: 500,
+        body: "Server Error: GEMINI_API_KEY is not set in Netlify environment.",
+      };
+    }
+
+    // Gemini endpoint
+    const apiUrl =
+      `https://generativelanguage.googleapis.com/v1beta/models/` +
+      `gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
+
+    // Call Gemini API
     const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents }),
     });
 
     if (!response.ok) {
-      return { statusCode: 500, body: "Error from Gemini API" };
+      return {
+        statusCode: 500,
+        body: `Gemini API Error: ${await response.text()}`,
+      };
     }
 
+    // Return model response to browser
     const result = await response.json();
-    
-    // 6. Send the AI's response back to the user's browser
     return {
       statusCode: 200,
-      body: JSON.stringify(result)
+      body: JSON.stringify(result),
     };
 
-  } catch (error) {
-    return { statusCode: 500, body: error.toString() };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: `Server Error: ${err}`,
+    };
   }
 };
